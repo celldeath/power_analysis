@@ -8,7 +8,7 @@ from scipy.stats import f_oneway
 
 df = pd.read_csv('mouse_tumor_volume.csv')
 means = df.mean()
-variances = np.square(1.5 * df.std())  # Twice the standard deviation (conservative)
+variances = np.square(1.5 * df.std())  # 1.5x standard deviation (conservative)
 size = 9  # This number gives us >80% power at 5% significance level
 alpha = 0.05  # Significance level
 significant = []
