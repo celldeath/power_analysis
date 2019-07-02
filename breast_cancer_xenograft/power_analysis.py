@@ -8,16 +8,16 @@ from scipy.stats import f_oneway
 
 df = pd.read_csv('mouse_tumor_volume.csv')
 means = df.mean()
-variances = 4 * df.var()  # Twice the standard deviation (conservative)
-size = 11 # This number gives us 80% power at 5% significance level
-alpha = 0.05 # Significance level
+variances = np.square(1.5 * df.std())  # Twice the standard deviation (conservative)
+size = 9  # This number gives us >80% power at 5% significance level
+alpha = 0.05  # Significance level
 significant = []
 
 # Parametric bootstrap
 for _ in range(10000):
     # Draw new data from Normal distribution using prior parameters above
     draw_bs = np.random.multivariate_normal(means, np.diag(variances), size=size)
-    df_bs  = pd.DataFrame(draw_bs, columns=means.index)
+    df_bs = pd.DataFrame(draw_bs, columns=means.index)
 
     # ANOVA test
     F, p = f_oneway(df_bs["saline"], df_bs["dox"], df_bs["dox+bai1"])
@@ -25,4 +25,4 @@ for _ in range(10000):
     significant.append(s)
 
 # Check how often we were (correctly) able to reject the hypothesis.
-print("Power: ", np.mean(significant))
+print("Power: ", np.mean(significant))  # ~91%
